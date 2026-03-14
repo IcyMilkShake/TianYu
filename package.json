@@ -1,0 +1,16 @@
+{
+  "name": "tianyu",
+  "version": "1.0.0",
+  "description": "TianYu — Voice-controlled desktop AI agent",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "dependencies": {
+    "uiohook-napi": "^1.5.4"
+  },
+  "devDependencies": {
+    "electron": "^41.0.0"
+  }
+}
