@@ -79,6 +79,21 @@
       font-size: 16px;
     }
 
+    #result-box {
+      width: 100%;
+      max-width: 640px;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #result {
+      font-size: 15px;
+      color: #6b7280;
+      text-align: center;
+    }
+
     #hint {
       font-size: 13px;
       color: #d1d5db;
@@ -104,6 +119,10 @@
 
   <div id="transcript-box">
     <p id="transcript" class="placeholder">Hold Right Alt and speak…</p>
+  </div>
+
+  <div id="result-box">
+    <p id="result"></p>
   </div>
 
   <p id="hint">Hold <kbd>Right Alt</kbd> to record &nbsp;·&nbsp; Release to transcribe</p>
@@ -139,6 +158,13 @@
         transcript.textContent = '(nothing heard)'
         transcript.classList.add('placeholder')
       }
+    })
+
+    window.electronAPI.onResult((data) => {
+      setStatus('done')
+      const resultBox = document.getElementById('result')
+      resultBox.textContent = data.message || ''
+      resultBox.style.color = data.success ? '#22c55e' : '#ef4444'
     })
 
     window.electronAPI.onError((msg) => {

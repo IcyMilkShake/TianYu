@@ -61,9 +61,28 @@ app.whenReady().then(() => {
       send('status', 'processing')
     })
 
-    worker.on('transcript', (text) => {
+    worker.on('transcript', async (text) => {
       console.log('[main] Transcript:', text)
       send('transcript', text)
+
+      // Feed transcript to Qwen
+      try {
+        const { think } = require('../core/llm')
+        const { execute } = require('../core/executor')
+
+        send('status', 'thinking')
+        const toolCall = await think(text)
+
+        send('status', 'executing')
+        const result = await execute(toolCall)
+
+        console.log('[main] Result:', result)
+        send('result', { tool: toolCall.tool, ...result })
+
+      } catch (err) {
+        console.error('[main] LLM/Executor error:', err.message)
+        send('error', err.message)
+      }
     })
 
     worker.on('workerError', (msg) => {
