@@ -47,9 +47,8 @@ function createBubbleWindow() {
   const bubblePath = path.join(__dirname, 'bubble.html')
   console.log('[bubble] Loading:', bubblePath)
   bubbleWindow.loadFile(bubblePath)
-  bubbleWindow.webContents.openDevTools({ mode: 'detach' })
-  bubbleWindow.setIgnoreMouseEvents(true)
-
+  bubbleWindow.hide()
+  
   bubbleWindow.webContents.on('did-finish-load', () => {
     console.log('[bubble] Loaded OK')
   })
@@ -163,11 +162,6 @@ app.whenReady().then(() => {
     worker.on('exit', () => send('error', 'Audio worker stopped'))
 
     worker.start()
-
-    // Test bubble on startup
-    setTimeout(() => {
-      showBubble('hi bro', 'happy')
-    }, 3000)
 
     try {
       const hotkey = require('../core/hotkey')
