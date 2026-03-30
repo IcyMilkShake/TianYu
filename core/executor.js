@@ -11,6 +11,13 @@ async function execute(toolCall) {
 
   if (!tool) throw new Error('No tool specified in response')
 
+  if (tool === 'unknown') {
+    return {
+      success: false,
+      message: `I didn't understand that. ${args?.reason || ''}`.trim()
+    }
+  }
+
   const handler = tools[tool]
   if (!handler) {
     return {

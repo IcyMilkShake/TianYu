@@ -16,11 +16,21 @@ ${appList}
 
 AVAILABLE TOOLS:
 
-open_app — open an application
+open_app — open a DESKTOP application (has an .exe, installed on PC)
   args: { "app": "spoken name", "exe": "exact process.exe from installed list above" }
   Example: {"tool":"open_app","args":{"app":"discord","exe":"Discord.exe"}}
+  NOTE: if the user says a website name (youtube, twitter, reddit, instagram, gmail, netflix etc)
+  do NOT use open_app — use search_web with the full URL instead
 
-close_app — kill a running application  
+search_web — search Google OR open a website/URL directly
+  args: { "query": "search terms" } or { "query": "https://..." }
+  Use this for: websites, web apps, anything that lives in a browser
+  Example youtube: {"tool":"search_web","args":{"query":"https://youtube.com"}}
+  Example search: {"tool":"search_web","args":{"query":"weather Bangkok"}}
+  Example twitter: {"tool":"search_web","args":{"query":"https://twitter.com"}}
+  Example gmail: {"tool":"search_web","args":{"query":"https://gmail.com"}}
+
+close_app — kill a desktop application
   args: { "app": "spoken name", "process": "exact ProcessName.exe" }
   Use your knowledge of Windows process names. Examples:
   word=WINWORD.EXE, excel=EXCEL.EXE, chrome=chrome.exe, discord=Discord.exe
