@@ -2,23 +2,19 @@
 <html>
 <head>
   <meta charset="UTF-8"/>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: transparent;
       overflow: hidden;
-      width: 380px;
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     #bubble-wrap {
       position: relative;
-      width: 380px;
-      height: 220px;
+      width: 100vw;
+      height: 100vh;
     }
 
     #bubble-img {
@@ -30,7 +26,8 @@
       transition: filter 0.4s ease;
     }
 
-    /* Emotion tints via hue-rotate on the gray bubble */
+img { display: block; border: 0; outline: none; box-shadow: none; background: transparent; width:100%; height:auto; box-shadow: none }
+
     #bubble-img.happy     { filter: hue-rotate(100deg) saturate(1.5) brightness(1.1); }
     #bubble-img.energized { filter: hue-rotate(40deg)  saturate(2)   brightness(1.1); }
     #bubble-img.sad       { filter: hue-rotate(200deg) saturate(1.3) brightness(0.9); }
@@ -49,11 +46,10 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Pixelify Sans', monospace;
       font-size: 15px;
-      font-weight: 600;
-      color: #ffffff;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      font-weight: 400;
+      color: #1a1a2e;
       word-wrap: break-word;
       overflow: hidden;
       line-height: 1.4;
@@ -71,22 +67,21 @@
   </div>
 
   <script>
-    const img   = document.getElementById('bubble-img')
-    const text  = document.getElementById('text')
-
+    const img  = document.getElementById('bubble-img')
+    const text = document.getElementById('text')
     const EMOTIONS = ['happy','energized','sad','angry','stressed','cunning','neutral']
 
-    window.electronAPI.onBubble(({ message, emotion }) => {
-      // Set emotion tint
+    window.electronAPI.onBubble(({ message, emotion, bubbleSrc }) => {
+      img.src = bubbleSrc
+      img.style.border = '0'
       img.className = EMOTIONS.includes(emotion) ? emotion : 'neutral'
 
-      // Set text
       text.classList.remove('visible')
+      const len = message.length
+      text.style.fontSize = len > 120 ? '11px' : len > 80 ? '13px' : len > 40 ? '14px' : '15px'
+
       setTimeout(() => {
         text.textContent = message
-        // Scale font down if text is long
-        const len = message.length
-        text.style.fontSize = len > 120 ? '11px' : len > 80 ? '13px' : len > 40 ? '14px' : '15px'
         text.classList.add('visible')
       }, 150)
     })

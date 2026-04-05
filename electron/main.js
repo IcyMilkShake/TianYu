@@ -21,16 +21,33 @@ function createWindow() {
   mainWindow.webContents.openDevTools()
 }
 
+// ── Bubble sizing ─────────────────────────────────────────────────────────────
+// All 1000px wide. bubble=541h (small), bubble2=621h (medium), bubble3=958h (large)
+// Displayed at 320px wide, height scaled proportionally
+const BUBBLES = {
+  small:  { src: '../assets/bubble.png',  w: 320, h: Math.round(320 * 541 / 1000) },
+  medium: { src: '../assets/bubble2.png', w: 320, h: Math.round(320 * 621 / 1000) },
+  large:  { src: '../assets/bubble3.png', w: 320, h: Math.round(320 * 955 / 1000) },
+}
+
+function pickBubble(len) {
+  if (len <= 60)  return BUBBLES.small
+  if (len <= 140) return BUBBLES.medium
+  return BUBBLES.large
+}
+
 // ── Bubble window ─────────────────────────────────────────────────────────────
 function createBubbleWindow() {
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize
-  console.log('[bubble] Screen size:', width, height)
+  const { width } = screen.getPrimaryDisplay().workAreaSize
 
   bubbleWindow = new BrowserWindow({
-    width: 380,
-    height: 220,
-    x: width - 400,
+    type: 'toolbar',
+    backgroundThrottling: false,
+    width: BUBBLES.small.w,
+    height: BUBBLES.small.h,
+    x: width - BUBBLES.small.w - 20,
     y: 20,
+    offscreen: false,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -44,17 +61,9 @@ function createBubbleWindow() {
     },
   })
 
-  const bubblePath = path.join(__dirname, 'bubble.html')
-  console.log('[bubble] Loading:', bubblePath)
-  bubbleWindow.loadFile(bubblePath)
+  bubbleWindow.loadFile(path.join(__dirname, 'bubble.html'))
+  bubbleWindow.setIgnoreMouseEvents(true)
   bubbleWindow.hide()
-  
-  bubbleWindow.webContents.on('did-finish-load', () => {
-    console.log('[bubble] Loaded OK')
-  })
-  bubbleWindow.webContents.on('did-fail-load', (e, code, desc) => {
-    console.error('[bubble] Load failed:', code, desc)
-  })
 }
 
 // ── IPC ───────────────────────────────────────────────────────────────────────
@@ -66,29 +75,17 @@ function send(channel, value) {
 
 let bubbleTimer = null
 
-const BUBBLE_SIZES = {
-  small:  { w: 380, h: 206 },
-  medium: { w: 320, h: 199 },
-  large:  { w: 300, h: 287 },
-}
-
-function pickBubbleSize(len) {
-  if (len <= 60)  return BUBBLE_SIZES.small
-  if (len <= 140) return BUBBLE_SIZES.medium
-  return BUBBLE_SIZES.large
-}
-
 function showBubble(message, emotion = 'neutral') {
   if (!bubbleWindow || bubbleWindow.isDestroyed()) return
   clearTimeout(bubbleTimer)
 
   const { width } = screen.getPrimaryDisplay().workAreaSize
-  const size = pickBubbleSize(message.length)
+  const bubble = pickBubble(message.length)
 
-  bubbleWindow.setSize(size.w, size.h)
-  bubbleWindow.setPosition(width - size.w - 20, 20)
+  bubbleWindow.setSize(bubble.w, bubble.h)
+  bubbleWindow.setPosition(width - bubble.w - 20, 20)
   bubbleWindow.showInactive()
-  bubbleWindow.webContents.send('bubble', { message, emotion, windowW: size.w, windowH: size.h })
+  bubbleWindow.webContents.send('bubble', { message, emotion, bubbleSrc: bubble.src })
 
   const duration = Math.max(3000, 3000 + Math.floor(message.length / 20) * 1000)
   bubbleTimer = setTimeout(() => {
@@ -105,7 +102,7 @@ function showBubble(message, emotion = 'neutral') {
 process.on('uncaughtException', (err) => {
   console.error('[main] Uncaught:', err)
 })
-
+app.disableHardwareAcceleration()
 app.whenReady().then(() => {
   console.log('[main] App ready')
   createWindow()
@@ -114,26 +111,24 @@ app.whenReady().then(() => {
   mainWindow.webContents.on('did-finish-load', () => {
     console.log('[main] Page loaded')
 
-    // Scan installed apps in background
     setTimeout(() => {
       try { require('../core/app_finder').scanApps() } catch (e) {}
     }, 2000)
 
-    // Start audio worker
     const worker = require('../core/recorder')
 
-    worker.on('loading',  (msg) => { send('status', 'loading'); console.log('[main]', msg) })
-    worker.on('ready',    (msg) => { send('status', 'idle');    console.log('[main]', msg) })
-    worker.on('recording',    () => send('status', 'listening'))
-    worker.on('transcribing', () => send('status', 'processing'))
+    worker.on('loading',      (msg) => { send('status', 'loading'); console.log('[main]', msg) })
+    worker.on('ready',        (msg) => { send('status', 'idle');    console.log('[main]', msg) })
+    worker.on('recording',    ()    => send('status', 'listening'))
+    worker.on('transcribing', ()    => send('status', 'processing'))
 
     worker.on('transcript', async (text) => {
       console.log('[main] Transcript:', text)
       send('transcript', text)
 
       try {
-        const { think }   = require('../core/llm')
-        const { execute } = require('../core/executor')
+        const { think }      = require('../core/llm')
+        const { execute }    = require('../core/executor')
         const { getEmotion } = require('../core/emotion')
 
         send('status', 'thinking')
@@ -145,7 +140,6 @@ app.whenReady().then(() => {
         console.log('[main] Result:', result)
         send('result', { tool: toolCall.tool, ...result })
 
-        // Show speech bubble with emotion
         if (result.message) {
           const emotion = getEmotion(toolCall.tool, result.success)
           showBubble(result.message, emotion)
@@ -159,7 +153,7 @@ app.whenReady().then(() => {
     })
 
     worker.on('workerError', (msg) => { send('error', msg); showBubble(msg, 'angry') })
-    worker.on('exit', () => send('error', 'Audio worker stopped'))
+    worker.on('exit',        ()    => send('error', 'Audio worker stopped'))
 
     worker.start()
 
