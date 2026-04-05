@@ -26,7 +26,9 @@
       transition: filter 0.4s ease;
     }
 
-img { display: block; border: 0; outline: none; box-shadow: none; background: transparent; width:100%; height:auto; box-shadow: none }
+    img {
+        border: 0
+    }
 
     #bubble-img.happy     { filter: hue-rotate(100deg) saturate(1.5) brightness(1.1); }
     #bubble-img.energized { filter: hue-rotate(40deg)  saturate(2)   brightness(1.1); }
@@ -73,7 +75,6 @@ img { display: block; border: 0; outline: none; box-shadow: none; background: tr
 
     window.electronAPI.onBubble(({ message, emotion, bubbleSrc }) => {
       img.src = bubbleSrc
-      img.style.border = '0'
       img.className = EMOTIONS.includes(emotion) ? emotion : 'neutral'
 
       text.classList.remove('visible')

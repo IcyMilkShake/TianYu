@@ -42,7 +42,7 @@ function createBubbleWindow() {
 
   bubbleWindow = new BrowserWindow({
     type: 'toolbar',
-    backgroundThrottling: false,
+    hasShadow: false,
     width: BUBBLES.small.w,
     height: BUBBLES.small.h,
     x: width - BUBBLES.small.w - 20,
@@ -102,7 +102,7 @@ function showBubble(message, emotion = 'neutral') {
 process.on('uncaughtException', (err) => {
   console.error('[main] Uncaught:', err)
 })
-app.disableHardwareAcceleration()
+
 app.whenReady().then(() => {
   console.log('[main] App ready')
   createWindow()
