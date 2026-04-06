@@ -21,9 +21,6 @@ function createWindow() {
   mainWindow.webContents.openDevTools()
 }
 
-// ── Bubble sizing ─────────────────────────────────────────────────────────────
-// All 1000px wide. bubble=541h (small), bubble2=621h (medium), bubble3=958h (large)
-// Displayed at 320px wide, height scaled proportionally
 const BUBBLES = {
   small:  { src: '../assets/bubble.png',  w: 320, h: Math.round(320 * 541 / 1000) },
   medium: { src: '../assets/bubble2.png', w: 320, h: Math.round(320 * 621 / 1000) },
@@ -36,7 +33,6 @@ function pickBubble(len) {
   return BUBBLES.large
 }
 
-// ── Bubble window ─────────────────────────────────────────────────────────────
 function createBubbleWindow() {
   const { width } = screen.getPrimaryDisplay().workAreaSize
 
@@ -86,7 +82,7 @@ function showBubble(message, emotion = 'neutral') {
   bubbleWindow.setPosition(width - bubble.w - 20, 20)
   bubbleWindow.showInactive()
   bubbleWindow.webContents.send('bubble', { message, emotion, bubbleSrc: bubble.src })
-
+  console.log("sent")
   const duration = Math.max(3000, 3000 + Math.floor(message.length / 20) * 1000)
   bubbleTimer = setTimeout(() => {
     if (bubbleWindow && !bubbleWindow.isDestroyed()) {
@@ -143,6 +139,7 @@ app.whenReady().then(() => {
         if (result.message) {
           const emotion = getEmotion(toolCall.tool, result.success)
           showBubble(result.message, emotion)
+          console.log("bubble shown with emotion:", emotion)
         }
 
       } catch (err) {

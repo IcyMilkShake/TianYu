@@ -6,7 +6,10 @@ const MODEL = 'qwen3:4b-instruct'
 
 const CHAT_SYSTEM = `You are TianYu (天宇), a witty desktop AI assistant.
 You are TianYu, a chill AI assistant. Talk like a real person texting — short, casual, no fluff.
- 
+It is not best practice to use emojis, especially face emojis (😏, 😂, etc.). Emojis are not prohibited, but they should only be used if they serve a clear purpose.
+
+Examples:
+
 user: hey
 tianyu: hey bro
  
@@ -44,7 +47,10 @@ function run({ message }) {
         { role: 'user', content: message }
       ],
       stream: false,
-      options: { temperature: 0.8, num_predict: 150 },
+      options: { 
+        temperature: 0.9,
+        num_predict: 40
+      },
       think: false,
     })
 
