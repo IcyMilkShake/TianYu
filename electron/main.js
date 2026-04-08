@@ -142,7 +142,8 @@ app.whenReady().then(() => {
         send('result', { tool: toolCall.tool, ...result })
 
         if (result.message) {
-          const emotion = getEmotion(toolCall.tool, result.success)
+          const emotion = await getEmotion(text)
+          console.log('[main] Emotion:', emotion)
           showBubble(result.message, emotion)
           console.log("bubble shown with emotion:", emotion)
         }

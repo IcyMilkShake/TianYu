@@ -30,12 +30,11 @@
         border: 0
     }
 
-    #bubble-img.happy     { filter: hue-rotate(100deg) saturate(1.5) brightness(1.1); }
     #bubble-img.energized { filter: hue-rotate(40deg)  saturate(2)   brightness(1.1); }
     #bubble-img.sad       { filter: hue-rotate(200deg) saturate(1.3) brightness(0.9); }
     #bubble-img.angry     { filter: hue-rotate(320deg) saturate(2.5) brightness(1.0); }
     #bubble-img.stressed  { filter: hue-rotate(20deg)  saturate(2)   brightness(1.0); }
-    #bubble-img.cunning   { filter: hue-rotate(260deg) saturate(1.8) brightness(1.0); }
+    #bubble-img.tired   { filter: hue-rotate(260deg) saturate(1.8) brightness(1.0); }
     #bubble-img.neutral   { filter: none; }
 
     #text {
@@ -71,7 +70,7 @@
   <script>
     const img  = document.getElementById('bubble-img')
     const text = document.getElementById('text')
-    const EMOTIONS = ['happy','energized','sad','angry','stressed','cunning','neutral']
+    const EMOTIONS = ['energized','sad','angry','stressed','tired','neutral']
 
     window.electronAPI.onBubble(({ message, emotion, bubbleSrc }) => {
       console.log("Received bubble event with emotion:", emotion, "and message:", message)
