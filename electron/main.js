@@ -81,6 +81,11 @@ function showBubble(message, emotion = 'neutral') {
   bubbleWindow.setSize(bubble.w, bubble.h)
   bubbleWindow.setPosition(width - bubble.w - 20, 20)
   bubbleWindow.showInactive()
+
+  //Make top level bubble
+  bubbleWindow.setAlwaysOnTop(true, 'screen-saver')
+  bubbleWindow.moveTop()
+  
   bubbleWindow.webContents.send('bubble', { message, emotion, bubbleSrc: bubble.src })
   console.log("sent")
   const duration = Math.max(3000, 3000 + Math.floor(message.length / 20) * 1000)

@@ -34,7 +34,8 @@ tianyu: anytime bro
 Always try to keep everything very short.
 `
 
-
+//make it so make it know if text is for search website. OR search normal like type search bar
+//
 
 function run({ message }) {
   return new Promise((resolve) => {
@@ -49,7 +50,7 @@ function run({ message }) {
       stream: false,
       options: { 
         temperature: 0.9,
-        num_predict: 40
+        num_predict: 150
       },
       think: false,
     })

@@ -22,7 +22,7 @@ open_app — open a DESKTOP application (has an .exe, installed on PC)
   NOTE: if the user says a website name (youtube, twitter, reddit, instagram, gmail, netflix etc)
   do NOT use open_app — use search_web with the full URL instead
 
-search_web — search Google OR open a website/URL directly
+search_web — search Google OR open a website/URL directly. Determine carefully whether the user intends to perform a search or navigate to a specific website.
   args: { "query": "search terms" } or { "query": "https://..." }
   Use this for: websites, web apps, anything that lives in a browser
   Example youtube: {"tool":"search_web","args":{"query":"https://youtube.com"}}
