@@ -7,7 +7,7 @@ const tools = {
   reject:     require('../tools/reject'),
 }
 
-async function execute(toolCall) {
+async function execute(toolCall, emotion) {
   const { tool, args } = toolCall
 
   if (!tool) throw new Error('No tool specified in response')
@@ -28,7 +28,8 @@ async function execute(toolCall) {
   }
 
   console.log(`[executor] Running tool: ${tool}`, args)
-  return await handler.run(args)
+  console.log(`[executor] Emotion:`, emotion)
+  return await handler.run(args, emotion)
 }
 
 module.exports = { execute }

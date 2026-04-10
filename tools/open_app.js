@@ -16,7 +16,7 @@ function launch(target) {
   })
 }
 
-async function run({ app, exe }) {
+async function run({ app, exe }, emotion) {
   if (!app) return { success: false, message: 'No app specified' }
 
   // 1. Qwen gave us an exe name — look it up in scanned apps

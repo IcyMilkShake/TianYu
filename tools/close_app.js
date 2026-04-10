@@ -1,6 +1,6 @@
 const { exec } = require('child_process')
 
-async function run({ app, process: procName }) {
+async function run({ app, process: procName }, emotion) {
   if (!app) return { success: false, message: 'No app specified' }
 
   // Qwen tells us the process name — use it directly

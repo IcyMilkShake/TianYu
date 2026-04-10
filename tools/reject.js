@@ -61,7 +61,7 @@ Stay in character. Be hilarious, keep it short and reject with style.
 
 
 
-function run({ message }) {
+function run({ message }, emotion) {
   return new Promise((resolve) => {
     if (!message) return resolve({ success: true, message: "What's up?" })
 

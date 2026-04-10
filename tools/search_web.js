@@ -1,6 +1,6 @@
 const { exec } = require('child_process')
 
-function run({ query }) {
+function run({ query }, emotion) {
   return new Promise((resolve) => {
     if (!query) return resolve({ success: false, message: 'No search query' })
 

@@ -1,6 +1,6 @@
 const { exec } = require('child_process')
 
-function run({ text }) {
+function run({ text }, emotion) {
   return new Promise((resolve) => {
     if (!text) return resolve({ success: false, message: 'No text to type' })
 
