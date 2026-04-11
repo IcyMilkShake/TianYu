@@ -4,7 +4,6 @@ const tools = {
   search_web: require('../tools/search_web'),
   type_text:  require('../tools/type_text'),
   chat:       require('../tools/chat'),
-  reject:     require('../tools/reject'),
 }
 
 async function execute(toolCall, emotion) {
@@ -32,7 +31,7 @@ async function execute(toolCall, emotion) {
 
   const result = await handler.run(args, emotion)
 
-  if (tool !== 'chat' && tool !== 'reject') {
+  if (tool !== 'chat') {
     const context = result.success
       ? `you just did: ${tool.replace('_', ' ')} ${JSON.stringify(args)} — respond naturally`
       : `you tried: ${tool.replace('_', ' ')} ${JSON.stringify(args)} but it failed — ${result.message} — respond naturally`

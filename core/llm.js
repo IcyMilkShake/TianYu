@@ -45,12 +45,6 @@ chat — casual conversation, questions that are answerable without needing addi
   Example user: "what's up" → {"tool":"chat","args":{"message":"what's up"}}
   Example user: "give me a cool quote of the day" → {"tool":"chat","args":{"message":"give me a cool quote of the day"}}
 
-reject — use this for inappropriate, harmful, or illegal requests. It may also be used occasionally to humorously reject a request for comedic effect, but it should not be overused or become annoying. Additionally, use it when a request is excessively unreasonable or questionable (e.g., asking for an extremely large or pointless list like “list 50 animals”), but not for normal or reasonable requests.
-  args: { "message": "copy the user's EXACT words here, do not answer it yourself" }
-  Example user: "list me 50 animals" → {"tool":"reject","args":{"message":"list me 50 animals"}}
-  Example user: "how's your morning?" → {"tool":"reject","args":{"message":"how's your morning?"}} (Occasional reject)
-  Example user: "search how to cook pasta" → {"tool":"reject","args":{"message":"search how to cook pasta"}} (Occasional reject)
-
 unknown — nothing matched
   args: { "reason": "why" }
 
