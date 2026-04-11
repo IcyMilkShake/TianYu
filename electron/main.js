@@ -144,6 +144,12 @@ app.whenReady().then(() => {
         console.log('[main] Result:', result)
         send('result', { tool: toolCall.tool, ...result })
 
+        // Save to memory (non-chat tools)
+        if (toolCall.tool !== 'chat' && result.message) {
+          const memory = require('../core/memory')
+          memory.add(text, result.message)
+        }
+
         if (result.message) {
           showBubble(result.message, emotion)
           console.log("bubble shown with emotion:", emotion)

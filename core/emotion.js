@@ -31,16 +31,30 @@ Output ONLY the one line. No explanation. Nothing else.
 
 ### Examples:
 User: "open youtube"                         → Weight: 0
-User: "hey"                                  → Weight: 1
+User: "hey"                                  → Weight: 0
+User: "are you mad at me?"                   → Weight: 0
+User: "having a good day?"                   → Weight: 1
 User: "that's exactly what I needed"         → Weight: 2
 User: "that was fast, thanks"                → Weight: 3
 User: "you're honestly so helpful"           → Weight: 4
 User: "i don't know what i'd do without you" → Weight: 5
+User: "why are you so aggressive today?"     → Weight: -1
+User: "you're being rude"                    → Weight: -1
 User: "this is taking forever"               → Weight: -1
+User: "yo, why are you so aggressive, dawg?" → Weight: -1
+User: "why are you especially rude today"    → Weight: -1
 User: "that's not what I asked for"          → Weight: -2
 User: "you keep getting this wrong"          → Weight: -3
 User: "you're useless"                       → Weight: -4
 User: "why the fuck can't you do anything right??" → Weight: -5
+
+Only change weight if the user is CLEARLY and DIRECTLY expressing emotion toward you.
+If the message is ambiguous, a question, or just a statement — treat it as 0 weight.
+
+Example:
+"why are you so aggressive today?" → Weight:  0 (concerned question, not disrespect)
+"you're useless" → Weight: -4 (direct insult)
+"you're the best" → Weight: +3 (clear compliment)
 `
 
 // ─────────────────────────────────────────────

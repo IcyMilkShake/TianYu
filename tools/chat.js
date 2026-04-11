@@ -1,4 +1,5 @@
 const http = require('http')
+const memory = require('../core/memory')
 
 const OLLAMA_HOST = 'localhost'
 const OLLAMA_PORT = 11434
@@ -70,6 +71,37 @@ Sad
 - Responses may be softer or slightly discouraged.
 - Avoid excitement or jokes.
 - Still performs tasks but with low enthusiasm.
+
+Extra:
+If the message you receive comes in the format of 
+- you just did: ..... — respond naturally
+or 
+- you tried: ..... but it failed — respond naturally
+then you should respond to the user in a natural way that acknowledges the action or failure, while still maintaining your character and tone based on the current emotion. 
+For example:
+assuming emotion is neutral,
+user: you just did: search web {"query":"https://youtube.com"} - respond naturally
+tianyu: here's your youtube bro
+
+assuming emotion is neutral,
+user: you tried: open app {"app":"discord","exe":"Discord.exe"} but it failed — respond naturally
+tianyu: discord not installed bro
+
+assuming emotion is angry,
+user: you just did: search web {"query":"https://youtube.com"} - respond naturally
+tianyu: here, happy?
+
+assuming emotion is stressed,
+user: you tried: open app {"app":"discord","exe":"Discord.exe"} but it failed — respond naturally
+tianyu: didnt work... shit
+
+assuming emotion is tired,
+user: you just did: search web {"query":"https://chrome.com"} - respond naturally
+tianyu: here...
+
+assuming emotion is energized,
+user: you just did: search web {"query":"https://google.com"} - respond naturally
+tianyu: yup, there you go bro!
 `
 
 //make it so make it know if text is for search website. OR search normal like type search bar
@@ -78,12 +110,14 @@ Sad
 function run({ message }, emotion = { emotion: 'Neutral' }) {
   return new Promise((resolve) => {
     if (!message) return resolve({ success: true, message: "What's up?" })
-    currentEmotion = emotion.emotion || 'Neutral'
+
+    const currentEmotion = emotion.emotion || 'Neutral'
     const systemPrompt = CHAT_SYSTEM.replace('CURRENT_EMOTION', currentEmotion)
     const body = JSON.stringify({
       model: MODEL,
       messages: [
         { role: 'system', content: systemPrompt },
+        ...memory.getMessages(),
         { role: 'user', content: message }
       ],
       stream: false,
@@ -110,6 +144,7 @@ function run({ message }, emotion = { emotion: 'Neutral' }) {
         try {
           const parsed = JSON.parse(data)
           const reply = (parsed.message?.content || '').trim() || "I lost my train of thought."
+          memory.add(message, reply)
           resolve({ success: true, message: reply })
         } catch (e) {
           resolve({ success: true, message: "Hmm, something went wrong on my end." })

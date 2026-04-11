@@ -29,7 +29,18 @@ async function execute(toolCall, emotion) {
 
   console.log(`[executor] Running tool: ${tool}`, args)
   console.log(`[executor] Emotion:`, emotion)
-  return await handler.run(args, emotion)
+
+  const result = await handler.run(args, emotion)
+
+  if (tool !== 'chat' && tool !== 'reject') {
+    const context = result.success
+      ? `you just did: ${tool.replace('_', ' ')} ${JSON.stringify(args)} — respond naturally`
+      : `you tried: ${tool.replace('_', ' ')} ${JSON.stringify(args)} but it failed — ${result.message} — respond naturally`
+      console.log(`[executor] Context for chat:`, context)
+    return tools.chat.run({ message: context }, emotion)
+  }
+
+  return result
 }
 
 module.exports = { execute }
