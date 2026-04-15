@@ -132,11 +132,11 @@ app.whenReady().then(() => {
         const { execute }    = require('../core/executor')
         const { getEmotion } = require('../core/emotion')
 
-        send('status', 'thinking')
-        const toolCall = await think(text)
-
         const emotion = await getEmotion(text)
         console.log('[main] Emotion:', emotion)
+
+        send('status', 'thinking')
+        const toolCall = await think(text, emotion)
 
         send('status', 'executing')
         const result = await execute(toolCall, emotion)

@@ -94,8 +94,9 @@ user: open youtube → "you can click that yourself bro"
 //make it so make it know if text is for search website. OR search normal like type search bar
 //
 
-function run({ message }, emotion = { emotion: 'Neutral' }) {
+function run({ message, refuse }, emotion = { emotion: 'Neutral' }) {
   console.log(message)
+  console.log("Refused request: ",refuse)
   return new Promise((resolve) => {
     if (!message) return resolve({ success: true, message: "What's up?" })
     const currentEmotion = emotion.message || 'Neutral'
