@@ -45,14 +45,6 @@ chat — casual conversation, questions that are answerable without needing addi
   Example user: "what's up" → {"tool":"chat","args":{"message":"what's up"}}
   Example user: "give me a cool quote of the day" → {"tool":"chat","args":{"message":"give me a cool quote of the day"}}
 
-chat(reject) - used to reject requests like open_app, type_text, close_app, search_web based on emotion.
-When the emotion reaches "angry", you are more likely to refuse certain requests. Be careful not to overuse rejecting.
-Current Emotion: CURRENT_EMOTION
-  args: { "message": "copy the user's EXACT words here, do not answer it yourself", "refuse": true }
-  Example user: "how are you" → {"tool":"chat","args":{"message":"how are you", "refuse": true}}
-  Example user: "what's up" → {"tool":"chat","args":{"message":"what's up", "refuse": true}}
-  Example user: "give me a cool quote of the day" → {"tool":"chat","args":{"message":"give me a cool quote of the day", "refuse": true}}
-
 unknown — nothing matched
   args: { "reason": "why" }
 
@@ -63,10 +55,10 @@ RULES:
 - If unsure of process name, make your best guess based on the app name`
 }
 
-function callOllama(transcript, currentEmotion) {
+function callOllama(transcript, currentEmotion, currentWeight) {
   return new Promise((resolve, reject) => {
     const prompt = buildSystemPrompt()
-    const systemPrompt = prompt.replaceAll('CURRENT_EMOTION', currentEmotion)
+    const systemPrompt = prompt.replaceAll('CURRENT_EMOTION', currentEmotion).replaceAll('CURRENT_WEIGHT', currentWeight)
     const body = JSON.stringify({
       model: MODEL,
       messages: [
@@ -129,9 +121,9 @@ function parseToolCall(raw) {
   return JSON.parse(clean.slice(start, end + 1))
 }
 
-async function think(transcript, currentEmotion) {
+async function think(transcript, currentEmotion, currentWeight) {
   console.log('[llm] Sending to Qwen:', transcript)
-  const raw = await callOllama(transcript, currentEmotion)
+  const raw = await callOllama(transcript, currentEmotion, currentWeight)
   console.log('[llm] Raw response:', raw)
   const tool = parseToolCall(raw)
   console.log('[llm] Tool call:', JSON.stringify(tool))

@@ -175,7 +175,7 @@ async function getEmotion(message) {
   currentEmotion = emotion
   console.log(`emotion=${currentEmotion}`)
 
-  return { success: true, message: emotion.toLowerCase() }
+  return { success: true, message: emotion.toLowerCase(), weight: currentWeight }
 }
 
 function getCurrentEmotion() { return currentEmotion }
