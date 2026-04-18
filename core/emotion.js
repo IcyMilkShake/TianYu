@@ -8,6 +8,25 @@ let currentEmotion = 'neutral'
 let currentWeight = 0
 
 // ─────────────────────────────────────────────
+// Tired detection — timestamps of recent messages
+// ─────────────────────────────────────────────
+const MESSAGE_TIMESTAMPS = []
+const TIRED_WINDOW_MS = 3 * 60 * 1000  // 3 minutes
+const TIRED_THRESHOLD = 15             // messages within that window
+
+function trackMessage() {
+  const now = Date.now()
+  MESSAGE_TIMESTAMPS.push(now)
+  while (MESSAGE_TIMESTAMPS.length && MESSAGE_TIMESTAMPS[0] < now - TIRED_WINDOW_MS) {
+    MESSAGE_TIMESTAMPS.shift()
+  }
+}
+
+function isTired() {
+  return MESSAGE_TIMESTAMPS.length >= TIRED_THRESHOLD
+}
+
+// ─────────────────────────────────────────────
 // PROMPT 1 — score the message, output weight only
 // ─────────────────────────────────────────────
 const SCORE_SYSTEM = `You are a sentiment scorer.
@@ -152,6 +171,14 @@ function callOllama(systemPrompt, userMessage) {
 async function getEmotion(message) {
   if (!message) return { success: true, message: "What's up?" }
 
+  //check tired
+  trackMessage()
+  if (isTired()) {
+    currentEmotion = 'Tired'
+    console.log(`tired override  msgs_in_window=${MESSAGE_TIMESTAMPS.length}`)
+    return { success: true, message: 'tired', weight: currentWeight }
+  }
+
   // ── Call 1: score the message ──
   const scoreReply = await callOllama(SCORE_SYSTEM, message)
   if (scoreReply === null) return { success: false, message: 'Ollama is not running' }
@@ -165,7 +192,6 @@ async function getEmotion(message) {
   console.log(`score=${score}  weight=${currentWeight}`)
 
   // ── Call 2: pick emotion from updated weight only ──
-  // Pass weight as the user message so the model focuses on it alone
   const emotionPrompt = EMOTION_SYSTEM.replace('CURRENT_WEIGHT', currentWeight)
   const emotionReply = await callOllama(emotionPrompt, `Current weight: ${currentWeight}`)
 
@@ -179,6 +205,6 @@ async function getEmotion(message) {
 }
 
 function getCurrentEmotion() { return currentEmotion }
-function resetEmotion() { currentEmotion = 'neutral'; currentWeight = 0 }
+function resetEmotion() { currentEmotion = 'neutral'; currentWeight = 0; MESSAGE_TIMESTAMPS.length = 0 }
 
 module.exports = { getEmotion, getCurrentEmotion, resetEmotion }

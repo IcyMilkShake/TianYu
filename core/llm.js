@@ -127,7 +127,52 @@ async function think(transcript, currentEmotion, currentWeight) {
   console.log('[llm] Raw response:', raw)
   const tool = parseToolCall(raw)
   console.log('[llm] Tool call:', JSON.stringify(tool))
-  return tool
+  //random rolls based on emotion, weight
+  if (isActionTool(tool.tool)) {
+      const rejectChance = getRejectionChance(currentEmotion, currentWeight);
+      if (rejectChance > 0) {
+        const roll = Math.random() * 100;   // roll 0-100
+
+        if (roll < rejectChance) {
+          console.log(`Rejected with chance: ${rejectChance}% | roll: ${roll.toFixed(1)}`);
+          return {
+            tool: "chat",
+            args: {
+              message: transcript,
+              refuse: true
+          }
+        };
+      }
+    }
+  }
+  console.log('[llm] Tool call:', JSON.stringify(tool));
+  return tool;
+}
+
+function isActionTool(toolName) {
+  return ['open_app', 'close_app', 'search_web', 'type_text'].includes(toolName);
+}
+
+function getRejectionChance(emotion, weight) {
+  if (!['angry', 'tired'].includes(emotion.toLowerCase())) {
+    return 0;
+  }
+  const w = Math.max(-10, Math.min(0, weight));
+
+  if (emotion.toLowerCase() === 'angry') {
+    if (w <= -8) return 20;
+    if (w <= -6) return 15;
+    if (w <= -4) return 10;
+    if (w <= -2) return 5;
+    return 1;
+  } 
+  else { // tired
+    if (w <= -8) return 25;
+    if (w <= -6) return 15;
+    if (w <= -4) return 10;
+    if (w <= -2) return 5;
+    return 5;
+  }
 }
 
 module.exports = { think }
