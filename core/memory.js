@@ -3,7 +3,7 @@ let history = []
 
 function add(userText, assistantText) {
   history.push({ role: 'user',      content: userText,      timestamp: Date.now() })
-  history.push({ role: 'assistant', content: assistantText, timestamp: Date.now() })
+  history.push({ role: 'system', content: assistantText, timestamp: Date.now() })
 
   if (history.length > MAX * 2) {
     history = history.slice(history.length - MAX * 2)

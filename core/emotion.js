@@ -89,19 +89,16 @@ Current weight: CURRENT_WEIGHT
 
 ## Emotion table — follow this strictly
 
-| Current weight | Emotion |
+| Current weight | Emotion   |
 |---|---|
-| +4 to +10 | Energized |
-| +1 to +3 | Neutral |
-| 0 | Neutral |
-| -1 to -3 | Sad |
-| -4 to -6 | Stressed |
-| -7 to -10 | Angry |
+| +4 to +10  | Energized |
+| -4 to +6   | Neutral   |
+| -7 to -10  | Angry     |
 
 IMPORTANT RULES:
-- Tired and Stressed from overwork require conversation history you do not have. Do NOT use Tired unless you have clear evidence of spamming/repetition. Default to Sad or Stressed instead.
-- If weight is -4 or lower, you MUST NOT output Neutral or Energized. Ever.
-- If weight is +1 or higher, you MUST NOT output Angry, Stressed, Sad, or Tired.
+- Do NOT use Tired — that is handled separately outside this prompt.
+- If weight is -5 or lower, you MUST output Angry. Nothing else.
+- If weight is +4 or higher, you MUST output Energized. Nothing else.
 - The weight is already computed. Do not second-guess it. Just look it up in the table.
 
 Output ONLY one line. Nothing else.
@@ -113,14 +110,12 @@ Emotion: [emotion]
 
 Current weight: 8  → Emotion: Energized
 Current weight: 5  → Emotion: Energized
+Current weight: 4  → Emotion: Energized
 Current weight: 3  → Emotion: Neutral
-Current weight: 1  → Emotion: Neutral
 Current weight: 0  → Emotion: Neutral
-Current weight: -1 → Emotion: Sad
-Current weight: -3 → Emotion: Sad
-Current weight: -4 → Emotion: Stressed
-Current weight: -6 → Emotion: Stressed
-Current weight: -7 → Emotion: Angry
+Current weight: -4 → Emotion: Neutral
+Current weight: -5 → Emotion: Angry
+Current weight: -8 → Emotion: Angry
 Current weight: -10 → Emotion: Angry
 `
 
@@ -171,7 +166,6 @@ function callOllama(systemPrompt, userMessage) {
 async function getEmotion(message) {
   if (!message) return { success: true, message: "What's up?" }
 
-  //check tired
   trackMessage()
   if (isTired()) {
     currentEmotion = 'Tired'
