@@ -1,4 +1,5 @@
 const MAX = 10
+//10 history only
 let history = []
 
 function add(userText, assistantText) {

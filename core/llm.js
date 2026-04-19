@@ -99,6 +99,7 @@ RULES:
 - For open_app: pick the best matching exe from the INSTALLED APPS list above.
 - For close_app: use your knowledge of Windows process names.`
 }
+//bro next project i aint usin sum 4B param AI's again dawg
 
 function callOllama(transcript, currentEmotion, currentWeight) {
   return new Promise((resolve, reject) => {
@@ -156,7 +157,7 @@ function parseToolCall(raw) {
 
   const start = clean.indexOf('{')
   if (start === -1) {
-    // model replied in plain text — wrap it as a chat
+    // fallback if model forgets to JSON it
     console.log('[llm] No JSON found, wrapping as chat:', raw)
     return { tool: 'chat', args: { message: raw } }
   }

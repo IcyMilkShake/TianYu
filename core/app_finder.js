@@ -20,7 +20,7 @@ function scanApps() {
 
   const found = {}
 
-  // 1. Filesystem scan — one level deep
+  // 1. Scan local, roaming, programs folder
   for (const dir of SCAN_DIRS) {
     if (!fs.existsSync(dir)) continue
     try {
@@ -59,7 +59,7 @@ function scanApps() {
     }
   } catch (e) {}
 
-  // 3. Start Menu shortcut scan
+  // 3. finding .lnk files
   try {
     const startDirs = [
       'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs',

@@ -4,7 +4,6 @@ const path = require('path')
 let mainWindow = null
 let bubbleWindow = null
 
-// ── Main window ───────────────────────────────────────────────────────────────
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
@@ -62,7 +61,6 @@ function createBubbleWindow() {
   bubbleWindow.hide()
 }
 
-// ── IPC ───────────────────────────────────────────────────────────────────────
 function send(channel, value) {
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send(channel, value)
@@ -99,7 +97,6 @@ function showBubble(message, emotion = 'neutral') {
   }, duration)
 }
 
-// ── App lifecycle ─────────────────────────────────────────────────────────────
 process.on('uncaughtException', (err) => {
   console.error('[main] Uncaught:', err)
 })

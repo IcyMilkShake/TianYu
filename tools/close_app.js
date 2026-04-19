@@ -3,7 +3,6 @@ const { exec } = require('child_process')
 async function run({ app, process: procName }, emotion) {
   if (!app) return { success: false, message: 'No app specified' }
 
-  // Qwen tells us the process name — use it directly
   const target = procName || (app + '.exe')
   console.log(`[close_app] Killing: ${target}`)
 

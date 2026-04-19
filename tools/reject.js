@@ -112,3 +112,4 @@ function run({ message }, emotion) {
 }
 
 module.exports = { run }
+//not using anymore. spare parts ig. dont wanna delete TT
