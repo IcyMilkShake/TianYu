@@ -60,4 +60,4 @@ Whisper may struggle with newer slang, or less common words that weren't well re
 
 ---
 
-**That being said this is my first attempt at heavy system prompting, and yet another extremelyproud project of mine :)**
+**That being said this is my first attempt at heavy system prompting, and yet another extremely proud project of mine :)**
