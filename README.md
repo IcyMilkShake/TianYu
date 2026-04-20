@@ -46,6 +46,7 @@ A separate lightweight AI pipeline scores each message for sentiment, accumulate
 You're welcome to fork and try out on your own BUT:
 
 > **Desktop environments differ.** App paths, registry entries, installed software — all of this is specific to the machine it was built on. Things that work out of the box here may not resolve correctly on yours. You'll likely need to adjust paths, tweak the app scanner, or reconfigure things to match your setup.
+
 > **Lack of Testing.** The app has not been tested on other screen sizes / dekstop version / macbook and more. Bubbles may appear out of place, open_app may not be able to find apps in folder.
 ---
 
