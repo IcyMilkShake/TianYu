@@ -15,7 +15,7 @@ TianYu takes your voice as input and figures out what to do with it. Say somethi
 - Search the web or open websites in your browser
 - Just chat — answer questions, banter, whatever
 
-**It also has feelings.** Based on how you talk to it, TianYu shifts between emotions — energized, neutral, tired, and angry — each one changing how it responds and how it talks back to you. The mood shows up visually through a pixel bubble that changes color depending on its current state.
+**It also simulates feelings.** Based on how you talk to it, TianYu shifts between emotions — energized, neutral, tired, and angry — each one changing how it responds and how it talks back to you. The mood shows up visually through a pixel bubble that changes color depending on its current state.
 
 ---
 
